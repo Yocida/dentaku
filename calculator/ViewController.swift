@@ -12,8 +12,8 @@ class ViewController: UIViewController {
     //変数宣言
     var numberOnScreen:Double = 0; // 画面上の数字
     var previousNumber:Double = 0; // 前回表示されていた数字
-    var numberOnScreen_Int:Int = 0; // 画面上の数字(整数)
-    var previousNumber_Int:Int = 0; // 前回表示されていた数字(整数)
+    var numberOnScreen_Int = 0; // 画面上の数字(整数)
+    var previousNumber_Int = 0; // 前回表示されていた数字(整数)
     var performingMath = false  // 計算可能フラグ
     var operation = 0; //  + , - , × , ÷
     
@@ -111,6 +111,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        //view.backgroundColor = UIColor.red
         
     }
     
