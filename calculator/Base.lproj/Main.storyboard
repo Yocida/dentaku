@@ -251,7 +251,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="button" destination="ciJ-0h-jUR" id="x2C-Dy-yah"/>
                         <outlet property="label" destination="G2z-gp-2os" id="act-ze-qY8"/>
                     </connections>
                 </viewController>
