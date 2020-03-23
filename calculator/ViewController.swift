@@ -10,109 +10,146 @@ import UIKit
 
 class ViewController: UIViewController {
     //変数宣言
-    var numberOnScreen:Double = 0; // 画面上の数字
+    var onscreenNumber:Double = 0; // 画面上の数字
     var previousNumber:Double = 0; // 前回表示されていた数字
-    var numberOnScreen_Int = 0; // 画面上の数字(整数)
-    var previousNumber_Int = 0; // 前回表示されていた数字(整数)
-    var performingMath = false  // 計算可能フラグ
     var operation = 0; //  + , - , × , ÷
     
-    @IBOutlet weak var label: UILabel!  // 計算結果表示ラベル
-    @IBOutlet weak var button: UIButton! {
-        didSet {
-            // ボタンの装飾
-            let rgba = UIColor(red: 200/255, green: 255/255, blue: 255/255, alpha: 1.0) // ボタン背景色設定
-            button.backgroundColor = rgba                                               // 背景色
-            button.layer.borderWidth = 0.5                                              // 枠線の幅
-            button.layer.borderColor = UIColor.black.cgColor                            // 枠線の色
-            button.layer.cornerRadius = 5.0                                             // 角丸のサイズ
+    var operationFlag = false  // 符号フラグ
+    var firstFlag = false //数字(整数)
+    var priodFlag = false // 小数点フラグ
+    var result : String = "" // 計算結果
+    
+       @IBOutlet weak var label: UILabel!{ // 計算結果表示ラベル
+        didSet{
+            label.text = "0"
         }
     }
+//       @IBOutlet weak var pushButton: UIButton!
     
     //数値ボタン押下時動作
     @IBAction func numbers(_ sender: UIButton) {
-        if performingMath == true{
-            label.text = String(sender.tag-1)  // numberOnScreen の値が上書きされる
-            numberOnScreen = Double(label.text!)!
-            performingMath = false
-        }
-        //表示文字数が14文字の場合
-        else if label.text!.utf8.count > 13{
-            numberOnScreen = Double(label.text!)!  // 数字が表示
-            print(label.text!.utf8.count)
-            print("入力最大桁数は14桁です。")
-        }
-        //0が入力されている場合
-        else if label.text == "0"{
-            label.text = String(sender.tag-1)
-        }
-        else{
-            label.text = label.text! + String(sender.tag-1)  // 表示文字＋押下ボタン数字
-            numberOnScreen = Double(label.text!)!  // 数字が表示
-            print(label.text!.utf8.count)
-        }
-    }
-    
-    //符号、クリアボタン押下時動作
-    @IBAction func buttons(_ sender: UIButton) {
-        //数字が表示されていた場合の処理
-        if label.text != "" && sender.tag != 11 && sender.tag != 16{
-            previousNumber = Double(label.text!)!
-            
-            if sender.tag == 15{ // ÷
-                label.text = "÷";
+        //符号ボタンの押下有無
+        if operationFlag {
+            //符号ボタン押下後最初の数値ボタン押下の場合
+            if firstFlag {
+                label.text = String(sender.tag-1)  // String(sender.tag-1) 表示
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+                firstFlag = false
+                
+//              pushButton.setTitleColor(UIColor.redColor(), forState: .Highlighted) //文字色
+//                pushButton.backgroundColor = UIColor(red:59/255,green:89/255,blue:152/255,alpha:0.7) //背景色
             }
-            else if sender.tag == 14{  // ×
-                label.text = "×";
+            //表示文字数が14文字の場合
+            else if label.text!.utf8.count > 13{
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+                print(label.text!.utf8.count)
+                print("入力最大桁数は14桁です。")
             }
-            else if sender.tag == 13{  // -
-                label.text = "-";
+            //0が入力されている場合
+            else if label.text == "0"{
+                label.text = String(sender.tag-1)
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+            } else {
+                label.text = label.text! + String(sender.tag-1)  // String(sender.tag-1) 表示
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
             }
-            else if sender.tag == 12{  // +
-                label.text = "+";
+        } else {
+            //=ボタン押下後最初の数値ボタン押下の場合
+            if firstFlag {
+                label.text = String(sender.tag-1)
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+                firstFlag = false
             }
-            
-            operation = sender.tag
-            performingMath = true;
-        }
-        // = が押された時の処理
-        else if sender.tag == 16
-        {
-            if operation == 15{ //÷
-                label.text = String(previousNumber / numberOnScreen)
+            //表示文字数が14文字の場合
+            else if label.text!.utf8.count > 13{
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+                print(label.text!.utf8.count)
+                print("入力最大桁数は14桁です。")
             }
-            else if operation == 14{//×
-                label.text = String(previousNumber * numberOnScreen)
+            //0が入力されている場合
+            else if label.text == "0"{
+                label.text = String(sender.tag-1)
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+            } else {
+                label.text = label.text! + String(sender.tag-1)  // 表示文字＋押下ボタン数字
+                onscreenNumber = Double(label.text!)!  // 数字に変換し代入
             }
-            else if operation == 13{//-
-                previousNumber_Int = Int(previousNumber)
-                numberOnScreen_Int = Int(numberOnScreen)
-                label.text = String(previousNumber_Int - numberOnScreen_Int)
-            }
-            else if operation == 12{//+
-                previousNumber_Int = Int(previousNumber)
-                numberOnScreen_Int = Int(numberOnScreen)
-                label.text = String(previousNumber_Int + numberOnScreen_Int)
-            }
-        }
-        // C が押された時の処理
-        else if sender.tag == 11{
-            label.text = ""     //ラベル表示空
-            previousNumber = 0;
-            numberOnScreen = 0;
-            operation = 0;      //符号
-        }
-        //数字が表示されていなかった場合の処理
-        else{
-            
         }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        //view.backgroundColor = UIColor.red
+    //符号、＝、クリアボタン押下時動作
+    @IBAction func buttons(_ sender: UIButton) {
+        //＋－×÷ボタン押下時の処理
+        if label.text != "" && sender.tag != 11 && sender.tag != 16{
+            if operationFlag {
+                keisan( operation:operation )
+            }
+            
+            previousNumber = Double(label.text!)!
+            operationFlag = true
+            firstFlag = true
+            operation = sender.tag
+            priodFlag = false
+        }
+        // =ボタン押下時の処理
+        else if sender.tag == 16 {
+            keisan( operation:operation )
+            previousNumber = 0;
+            onscreenNumber = 0;
+            operation = 0;      //符号
+            operationFlag = false
+            firstFlag = true
+            result = "0"
+            priodFlag = false
+        }
+        // Cボタン押下時の処理
+        else if sender.tag == 11{
+            label.text = "0"     //ラベル表示空
+            previousNumber = 0;
+            onscreenNumber = 0;
+            operation = 0;      //符号
+            operationFlag = false
+            firstFlag = false
+            result = "0"
+            priodFlag = false
+        }
+        // .ボタン押下時の処理
+        else if sender.tag == 17{
+            if priodFlag {
+                print("小数点はすでに使用されています。")
+            } else {
+                label.text = label.text! + "."  // String(sender.tag-1) 表示
+                priodFlag = true
+            }
+        }
+        // +/-ボタン押下時の処理
+        else if sender.tag == 18{
+        }
+        // %ボタン押下時の処理
+        else if sender.tag == 19{
+        }
+    }
+
+    //四則計算関数
+    func keisan(operation:Int){
+        if operation == 15{ //÷
+            result = String(previousNumber / onscreenNumber)
+        }
+        else if operation == 14{//×
+            result = String(previousNumber * onscreenNumber)
+        }
+        else if operation == 13{//-
+            result = String(previousNumber - onscreenNumber)
+        }
+        else if operation == 12{//+
+            result = String(previousNumber + onscreenNumber)
+        }
         
+        label.text = result.replacingOccurrences(of:"\\.0$", with:"", options: NSString.CompareOptions.regularExpression, range: nil)
     }
     
+    //view読み込み時の動作
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
 }
