@@ -55,12 +55,12 @@ class ViewController: UIViewController {
         } else {
             //=ボタン押下後最初の数値ボタン押下の場合
             if firstFlag {
-                label.text = String(sender.tag-1)  // String(sender.tag-1) 表示
+                label.text = String(sender.tag-1)
                 onscreenNumber = Double(label.text!)!  // 数字に変換し代入
                 firstFlag = false
             }
             //表示文字数が14文字の場合
-            if label.text!.utf8.count > 13{
+            else if label.text!.utf8.count > 13{
                 onscreenNumber = Double(label.text!)!  // 数字に変換し代入
                 print(label.text!.utf8.count)
                 print("入力最大桁数は14桁です。")
@@ -88,10 +88,6 @@ class ViewController: UIViewController {
             operationFlag = true
             firstFlag = true
             operation = sender.tag
-//            pushButton = sender
-            
-//            sender.setTitleColor(UIColor.redColor(), forState: .Highlighted) //文字色
- //           sender.backgroundColor = UIColor(red:59/255,green:89/255,blue:152/255,alpha:0.7) //背景色
         }
         // =ボタン押下時の処理
         else if sender.tag == 16 {
@@ -101,6 +97,7 @@ class ViewController: UIViewController {
             operation = 0;      //符号
             operationFlag = false
             firstFlag = true
+            result = "0"
         }
         // Cボタン押下時の処理
         else if sender.tag == 11{
@@ -110,6 +107,7 @@ class ViewController: UIViewController {
             operation = 0;      //符号
             operationFlag = false
             firstFlag = false
+            result = "0"
         }
     }
 
