@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     
     var operationFlag = false  // 符号フラグ
     var firstFlag = false //数字(整数)
+    var priodFlag = false // 小数点フラグ
     var result : String = "" // 計算結果
     
        @IBOutlet weak var label: UILabel!{ // 計算結果表示ラベル
@@ -88,6 +89,7 @@ class ViewController: UIViewController {
             operationFlag = true
             firstFlag = true
             operation = sender.tag
+            priodFlag = false
         }
         // =ボタン押下時の処理
         else if sender.tag == 16 {
@@ -98,6 +100,7 @@ class ViewController: UIViewController {
             operationFlag = false
             firstFlag = true
             result = "0"
+            priodFlag = false
         }
         // Cボタン押下時の処理
         else if sender.tag == 11{
@@ -108,6 +111,22 @@ class ViewController: UIViewController {
             operationFlag = false
             firstFlag = false
             result = "0"
+            priodFlag = false
+        }
+        // .ボタン押下時の処理
+        else if sender.tag == 17{
+            if priodFlag {
+                print("小数点はすでに使用されています。")
+            } else {
+                label.text = label.text! + "."  // String(sender.tag-1) 表示
+                priodFlag = true
+            }
+        }
+        // +/-ボタン押下時の処理
+        else if sender.tag == 18{
+        }
+        // %ボタン押下時の処理
+        else if sender.tag == 19{
         }
     }
 
