@@ -9,8 +9,9 @@ import UIKit
 
 class ViewController: UIViewController {
     //変数宣言
-    var onscreenNumber:Double = 0; // 画面上の数字
-    var previousNumber:Double = 0; // 前回表示されていた数字
+    var onscreenNumber:Decimal = 0; // 画面上の数字
+    var previousNumber:Decimal = 0; // 前回表示されていた数字
+    
     var operation = 0; //  + , - , × , ÷
     
     var operationFlag = false  // 符号フラグ
@@ -19,12 +20,17 @@ class ViewController: UIViewController {
     var mainusFlag = false //正負フラグ
     var result : String = "" // 計算結果
     
-       @IBOutlet weak var label: UILabel!{ // 計算結果表示ラベル
+    @IBOutlet weak var label: UILabel!{ // 計算結果表示ラベル
         didSet{
             label.text = "0"
         }
     }
-//       @IBOutlet weak var pushButton: UIButton!
+
+    //符号ボタン
+    @IBOutlet weak var buttonPlus: UIButton! // +ボタン
+    @IBOutlet weak var buttonMinus: UIButton! // -ボタン
+    @IBOutlet weak var buttonMulti: UIButton! // ×ボタン
+    @IBOutlet weak var buttonDivi: UIButton! // ÷ボタン
     
     //数値ボタン押下時動作
     @IBAction func numbers(_ sender: UIButton) {
@@ -32,11 +38,15 @@ class ViewController: UIViewController {
         if operationFlag {
             //符号ボタン押下後最初の数値ボタン押下の場合
             if firstFlag {
-                label.text = String(sender.tag-1)  // String(sender.tag-1) 表示
-                firstFlag = false
+                //-が入力されている場合
+                if label.text == "-"{
+                    label.text = label.text! + String(sender.tag-1)
+                } else {
+                    label.text = String(sender.tag-1)  // String(sender.tag-1) 表示
+                }
                 
-//              pushButton.setTitleColor(UIColor.redColor(), forState: .Highlighted) //文字色
-//              pushButton.backgroundColor = UIColor(red:59/255,green:89/255,blue:152/255,alpha:0.7) //背景色
+                firstFlag = false
+                hugouColor()
             }
             //表示文字数が14文字の場合
             else if label.text!.utf8.count > 13{
@@ -50,11 +60,17 @@ class ViewController: UIViewController {
                 label.text = label.text! + String(sender.tag-1)  // String(sender.tag-1) 表示
             }
             
-            onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+            onscreenNumber = Decimal(string: label.text!)! // 数字に変換し代入
         } else {
             //=ボタン押下後最初の数値ボタン押下の場合
             if firstFlag {
-                label.text = String(sender.tag-1)
+                //-が入力されている場合
+                if label.text == "-"{
+                    label.text = label.text! + String(sender.tag-1)
+                } else {
+                    label.text = String(sender.tag-1)
+                }
+                
                 firstFlag = false
             }
             //表示文字数が14文字の場合
@@ -66,37 +82,30 @@ class ViewController: UIViewController {
             else if label.text == "0"{
                 label.text = String(sender.tag-1)
             } else {
-                label.text = label.text! + String(sender.tag-1)  // 表示文字＋押下ボタン数字
+                label.text = label.text! + String(sender.tag-1)  // String(sender.tag-1) 表示
             }
             
-            onscreenNumber = Double(label.text!)!  // 数字に変換し代入
+            onscreenNumber = Decimal(string: label.text!)!
         }
     }
 
     //符号、＝、クリアボタン押下時動作
     @IBAction func buttons(_ sender: UIButton) {
         //＋－×÷ボタン押下時の処理
-        if label.text != "" && sender.tag != 11 && sender.tag != 16 && sender.tag != 17 && sender.tag != 18 && sender.tag != 19{
+        if label.text != "" && sender.tag != 11 && sender.tag != 16{
             if operationFlag {
                 keisan( operation:operation )
             }
             
-            previousNumber = Double(label.text!)!
+            previousNumber = Decimal(string: label.text!)!
             operationFlag = true
             firstFlag = true
             operation = sender.tag
             priodFlag = false
-        }
-        // =ボタン押下時の処理
-        else if sender.tag == 16 {
-            keisan( operation:operation )
-            previousNumber = 0;
-            onscreenNumber = 0;
-            operation = 0;      //符号
-            operationFlag = false
-            firstFlag = true
-            result = "0"
-            priodFlag = false
+            mainusFlag = false
+            
+            sender.setTitleColor(UIColor.systemYellow, for: .normal) //文字色
+            sender.backgroundColor = UIColor.white //背景色
         }
         // Cボタン押下時の処理
         else if sender.tag == 11{
@@ -108,51 +117,87 @@ class ViewController: UIViewController {
             firstFlag = false
             result = "0"
             priodFlag = false
+            mainusFlag = false
+            
+            hugouColor()
         }
+        // =ボタン押下時の処理
+        else if sender.tag == 16 {
+            keisan( operation:operation )
+            previousNumber = 0;
+            onscreenNumber = 0;
+            operation = 0;      //符号
+            operationFlag = false
+            firstFlag = true
+            result = "0"
+            priodFlag = false
+            mainusFlag = false
+        }
+    }
+    
+    //．、+/-、％ボタン押下時動作
+    @IBAction func otherbuttons(_ sender: UIButton) {
         // .ボタン押下時の処理
-        else if sender.tag == 17{
+        if sender.tag == 17{
             if priodFlag {
                 print("小数点はすでに使用されています。")
             } else {
-                label.text = label.text! + "."  // String(sender.tag-1) 表示
+                label.text = label.text! + "."  // 表示文字＋押下ボタン
                 priodFlag = true
             }
         }
         // +/-ボタン押下時
         else if sender.tag == 18{
             if mainusFlag {
-                //label.text = label.text!.suffix(label.text.count - 1)  // 押下ボタン＋表示文字
-                onscreenNumber = Double(label.text!)!  // 数字が表示
+                label.text = String( fabs(Double(label.text!)!) ).replacingOccurrences(of:"\\.0$", with:"", options: NSString.CompareOptions.regularExpression, range: nil) //絶対値
                 mainusFlag = false
+            } else if firstFlag {
+                label.text = "-" // 押下ボタン＋表示文字
+                mainusFlag = true
             } else {
                 label.text = "-" + label.text!  // 押下ボタン＋表示文字
-                onscreenNumber = Double(label.text!)!  // 数字が表示
                 mainusFlag = true
             }
         }
         // %ボタン押下時の処理
         else if sender.tag == 19{
-            onscreenNumber = Double(label.text!)! / 100  // 数字が表示
-            label.text = String(onscreenNumber)  // 押下ボタン＋表示文字
+//            onscreenNumber = Double(label.text!)! / 100  // 数字に変換し代入
+            onscreenNumber = Decimal(string: label.text!)! / 100  // 数字に変換し代入
+            label.text = String(describing: onscreenNumber)  // 押下ボタン＋表示文字
         }
     }
 
     //四則計算関数
     func keisan(operation:Int){
         if operation == 15{ //÷
-            result = String(previousNumber / onscreenNumber)
+            result = String(describing: previousNumber / onscreenNumber)
         }
         else if operation == 14{//×
-            result = String(previousNumber * onscreenNumber)
+            result = String(describing: previousNumber * onscreenNumber)
         }
         else if operation == 13{//-
-            result = String(previousNumber - onscreenNumber)
+            result = String(describing: previousNumber - onscreenNumber)
         }
         else if operation == 12{//+
-            result = String(previousNumber + onscreenNumber)
+            result = String(describing: previousNumber + onscreenNumber)
         }
         
         label.text = result.replacingOccurrences(of:"\\.0$", with:"", options: NSString.CompareOptions.regularExpression, range: nil)
+    }
+    
+    //符号ボタン色変化
+    func hugouColor(){
+        buttonPlus.setTitleColor(UIColor.white, for: .normal) // タイトルの色
+        buttonPlus.backgroundColor = UIColor.systemYellow //背景色
+        
+        buttonMinus.setTitleColor(UIColor.white, for: .normal) //文字色
+        buttonMinus.backgroundColor = UIColor.systemYellow //背景色
+        
+        buttonMulti.setTitleColor(UIColor.white, for: .normal) //文字色
+        buttonMulti.backgroundColor = UIColor.systemYellow //背景色
+        
+        buttonDivi.setTitleColor(UIColor.white, for: .normal) //文字色
+        buttonDivi.backgroundColor = UIColor.systemYellow //背景色
     }
     
     //view読み込み時の動作

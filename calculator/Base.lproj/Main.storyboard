@@ -51,7 +51,7 @@
                                                 <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <state key="normal" title="+/-"/>
                                                 <connections>
-                                                    <action selector="buttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gkW-Gc-3Wm"/>
+                                                    <action selector="otherbuttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CGp-4b-xRi"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="19" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cw5-SS-VaL">
@@ -61,7 +61,7 @@
                                                 <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <state key="normal" title="%"/>
                                                 <connections>
-                                                    <action selector="buttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SkU-Al-vry"/>
+                                                    <action selector="otherbuttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2ZV-Q9-ozX"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVh-NX-wCW">
@@ -239,7 +239,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                 <state key="normal" title="."/>
                                                 <connections>
-                                                    <action selector="buttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4rr-QO-B9G"/>
+                                                    <action selector="otherbuttons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t3d-1D-xr8"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-kS-NHI">
@@ -280,6 +280,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="buttonDivi" destination="tVh-NX-wCW" id="Diz-k6-Pbj"/>
+                        <outlet property="buttonMinus" destination="hhg-ss-yAg" id="Zqj-09-vkH"/>
+                        <outlet property="buttonMulti" destination="f24-Nj-8nv" id="Q4I-6N-SlG"/>
+                        <outlet property="buttonPlus" destination="75d-20-gLV" id="1Bf-GO-DKx"/>
                         <outlet property="label" destination="G2z-gp-2os" id="act-ze-qY8"/>
                     </connections>
                 </viewController>
